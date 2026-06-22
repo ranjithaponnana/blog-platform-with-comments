@@ -11,11 +11,8 @@ const [posts,setPosts]=useState([]);
 
 function getPosts(){
 
-
 axios.get(
-
 "http://127.0.0.1:5000/posts"
-
 )
 
 .then(res=>{
@@ -23,7 +20,6 @@ axios.get(
 setPosts(res.data);
 
 });
-
 
 }
 
@@ -38,6 +34,89 @@ getPosts();
 
 
 
+function deletePost(id){
+
+
+const token =
+localStorage.getItem("token");
+
+
+axios.delete(
+
+`http://127.0.0.1:5000/posts/${id}`,
+
+{
+headers:{
+Authorization:`Bearer ${token}`
+}
+}
+
+)
+
+.then(()=>{
+
+alert("Post deleted");
+
+getPosts();
+
+});
+
+
+}
+
+
+
+
+
+function updatePost(id){
+
+
+let title =
+prompt("Enter new title");
+
+
+let content =
+prompt("Enter new content");
+
+
+
+const token =
+localStorage.getItem("token");
+
+
+
+axios.put(
+
+`http://127.0.0.1:5000/posts/${id}`,
+
+{
+title,
+content
+},
+
+{
+headers:{
+Authorization:`Bearer ${token}`
+}
+}
+
+)
+
+.then(()=>{
+
+alert("Post updated");
+
+getPosts();
+
+});
+
+
+}
+
+
+
+
+
 return(
 
 <div>
@@ -47,12 +126,12 @@ All Blog Posts
 </h2>
 
 
-
 {
 
 posts.map(post=>(
 
 <div key={post[0]}>
+
 
 <h3>
 {post[2]}
@@ -64,13 +143,28 @@ posts.map(post=>(
 </p>
 
 
+
+<button
+onClick={()=>updatePost(post[0])}
+>
+Edit
+</button>
+
+
+
+<button
+onClick={()=>deletePost(post[0])}
+>
+Delete
+</button>
+
+
 </div>
 
 
 ))
 
 }
-
 
 
 </div>
